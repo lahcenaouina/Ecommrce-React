@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 // Pages
@@ -11,25 +10,25 @@ import Electronics from "./Pages/Electronics.jsx";
 import Fashions from "./Pages/Fashions.jsx";
 import FeaturedProducts from "./Pages/FeaturedProducts.jsx";
 import NewArrivals from "./Pages/NewArrivals.jsx";
-import Cars from "./Components/Cars.jsx";
 import PagePosts from "./Components/PagePosts.jsx";
 import Products from "./Components/Products.jsx";
 import NotFound from "./Components/NotFound.jsx";
 import ProductDetails from "./Pages/ProductDetails.jsx";
-
+//oth
 const App = () => {
+
     return (
         <>
+
             <Navbar />
             <Routes>
-                <Route exact path="/" element={<Home />} />
-                <Route  path="/AllCategories" element={<AllCategories />}>
-                    <Route index element={<Cars />} />
-                    <Route path="Cars" element={<Cars />} />
+                <Route exact path="/AllCategories" element={<AllCategories />} />
+                <Route  path="/" element={<Home />}>
                     <Route path="posts" element={<PagePosts />} />
-                    <Route path="products" element={<Products />}/>
+                    <Route index path="products" element={<Products />}/>
                     <Route path="details/:id" element={<ProductDetails />} />
                 </Route>
+
                 <Route path="/Appliances" element={<Appliances />} />
                 <Route path="/Contact" element={<Contact />} />
                 <Route path="/Electronics" element={<Electronics />} />

@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
 import {useEffect , useState} from "react";
 import {getProductsbyId} from "../Api/Axios.js";
+import {useStoreActions} from "easy-peasy";
 const ProductDetails = () => {
     const Params = useParams();
+
     const [IsLoading, setIsloading] = useState(true);
     const [DataProduct, setDataProdut] = useState([]);
     useEffect( () => {
@@ -23,7 +25,7 @@ const ProductDetails = () => {
     return (
         <>
             {IsLoading && <p>Loading...</p>}
-            {!IsLoading && JSON.stringify(DataProduct)}
+            {!IsLoading && JSON.stringify(DataProduct , 0  , 2)}
         </>
     )
 

@@ -2,9 +2,30 @@ import '../assets/styles/CardProduct.css'
 import {FaHeart, FaInfo, FaStar} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 import {FaCartShopping} from "react-icons/fa6";
+import {useStoreActions, useStoreState} from "easy-peasy";
+import {useState} from "react";
 
 const Card = ({Product}) => {
     const navigate = useNavigate();
+    const addToWishlist = useStoreActions(Actions => Actions.wishlist.addToWishlist)
+    const removeFromWishlist = useStoreActions(Actions => Actions.wishlist.removeFromWishlist)
+    const Wishlist = useStoreState(state => state.wishlist.items);
+    const [IsInWishlist, setIsInWishlist] = useState(Wishlist.includes(Product.id));
+
+    const HandleWishBtn = () => {
+        console.log("In the wishlit : " + IsInWishlist)
+        if (IsInWishlist) {
+            removeFromWishlist(Product.id)
+            setIsInWishlist(false)
+        } else {
+            addToWishlist(Product.id)
+            setIsInWishlist(true)
+
+        }
+
+    }
+
+
     return (<>
             <div className="row justify-content-center mb-3 ">
                 <div className="col-md-12 col-xl-10">
@@ -70,22 +91,26 @@ const Card = ({Product}) => {
                                     </div>
                                     <h6 className="text-success">Free shipping</h6>
                                     <div className="d-flex flex-column mt-4">
-                                        <button className="btn btn-primary btn-sm"
-                                                onClick={() => navigate(`/AllCategories/details/${Product.id}`)} type="button">
-                                            Details <FaInfo/>
-                                        </button>
-                                        <button
-                                            className="btn btn-outline-danger btn-sm mt-2"
-                                            type="button"
-                                        >
-                                            Add to wishlist <FaHeart/>
-                                        </button>
                                         <button
                                             className="btn btn-outline-warning btn-sm mt-2"
                                             type="button"
+                                            style={{color: 'black'}}
                                         >
                                             ADD TO CART <FaCartShopping/>
                                         </button>
+                                        <div className='d-flex justify-content-between'>
+                                            <button className="btn btn-primary mt-2 btn-sm w-50"
+                                                    onClick={() => navigate(`/details/${Product.id}`)} type="button">
+                                                Details <FaInfo/>
+                                            </button>
+                                            <button
+                                                className={IsInWishlist ? "btn btn-danger btn-sm mt-2 w-25" : "btn btn-outline-danger btn-sm w-25 mt-2"}
+                                                type="button"
+                                                onClick={HandleWishBtn}
+                                            >
+                                                <span ><FaHeart/></span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
