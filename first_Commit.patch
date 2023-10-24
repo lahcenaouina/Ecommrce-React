@@ -1,0 +1,1099 @@
+Subject: [PATCH] first Commit
+---
+Index: Api/Axios.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Api/Axios.js b/Api/Axios.js
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Api/Axios.js	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,23 @@
++import axios from 'axios'
++
++export const api = axios.create({
++    baseURL: 'https://jsonplaceholder.typicode.com'
++})
++export const apiStore = axios.create({
++    baseURL: 'https://fakestoreapi.com'
++})
++
++export const getDataPosts = async (pageParam = 1, options = {}) => {
++    const response = await api.get(`/posts?_page=${pageParam}`, options)
++    return response.data
++}
++
++export const getProducts = async (limit = 15 , options = {}) => {
++    const response  = await apiStore.get(`/products?limit=${limit}` , options)
++    return response.data
++}
++
++export const getProductsbyId = async (id  , options ={}) => {
++    const response = await apiStore.get('/products/'+id , options)
++    return response.data ; 
++}
+\ No newline at end of file
+Index: App.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/App.css b/App.css
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/App.css	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,21 @@
++body {
++  width: 100%;
++  display: flex;
++  height: 95vh;
++}
++#root {
++  margin: 0;
++  padding: 0;
++  height: 100%;
++  width: 100%;
++}
++
++.loading {
++  color: #f79917;
++  animation: spin 0.3s linear infinite;
++}
++
++@keyframes spin {
++  0% { transform: rotate(0deg); color:#f79917}
++  100% { transform: rotate(360deg); color: #fe302f }
++}
+Index: App.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/App.jsx b/App.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/App.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,45 @@
++import React from "react";
++import { Route, Routes } from "react-router-dom";
++
++// Pages
++import Home from "./Pages/Home.jsx";
++import Contact from "./Pages/Contact.jsx";
++import Navbar from "./Components/Navbar.jsx";
++import AllCategories from "./Pages/AllCategories.jsx";
++import Appliances from "./Pages/Appliances.jsx";
++import Electronics from "./Pages/Electronics.jsx";
++import Fashions from "./Pages/Fashions.jsx";
++import FeaturedProducts from "./Pages/FeaturedProducts.jsx";
++import NewArrivals from "./Pages/NewArrivals.jsx";
++import Cars from "./Components/Cars.jsx";
++import PagePosts from "./Components/PagePosts.jsx";
++import Products from "./Components/Products.jsx";
++import NotFound from "./Components/NotFound.jsx";
++import ProductDetails from "./Pages/ProductDetails.jsx";
++
++const App = () => {
++    return (
++        <>
++            <Navbar />
++            <Routes>
++                <Route exact path="/" element={<Home />} />
++                <Route  path="/AllCategories" element={<AllCategories />}>
++                    <Route index element={<Cars />} />
++                    <Route path="Cars" element={<Cars />} />
++                    <Route path="posts" element={<PagePosts />} />
++                    <Route path="products" element={<Products />}/>
++                    <Route path="details/:id" element={<ProductDetails />} />
++                </Route>
++                <Route path="/Appliances" element={<Appliances />} />
++                <Route path="/Contact" element={<Contact />} />
++                <Route path="/Electronics" element={<Electronics />} />
++                <Route path="/Fashions" element={<Fashions />} />
++                <Route path="/FeaturedProducts" element={<FeaturedProducts />} />
++                <Route path="/NewArrivals" element={<NewArrivals />} />
++                <Route path="*" element={<NotFound />} />
++            </Routes>
++        </>
++    );
++};
++
++export default App;
+Index: Components/Card.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Card.jsx b/Components/Card.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Card.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,102 @@
++import '../assets/styles/CardProduct.css'
++import {FaHeart, FaInfo, FaStar} from "react-icons/fa";
++import {useNavigate} from "react-router-dom";
++import {FaCartShopping} from "react-icons/fa6";
++
++const Card = ({Product}) => {
++    const navigate = useNavigate();
++    return (<>
++            <div className="row justify-content-center mb-3 ">
++                <div className="col-md-12 col-xl-10">
++                    <div className="card shadow-0 border rounded-3">
++                        <div className="card-body">
++                            <div className="row">
++                                <div className="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
++                                    <div className="bg-image hover-zoom ripple rounded ripple-surface">
++                                        <img id='imgProduct'
++                                             src={Product.image}
++                                             className=" fixeSize"
++                                        />
++                                        <a href="#!">
++                                            <div className="hover-overlay">
++                                                <div
++                                                    className="mask"
++                                                    style={{
++                                                        backgroundColor: "rgba(253, 253, 253, 0.15)"
++                                                    }}
++                                                />
++                                            </div>
++                                        </a>
++                                    </div>
++                                </div>
++                                <div className="col-md-6 col-lg-6 col-xl-6">
++                                    <h5>{Product.title}</h5>
++                                    <div className="d-flex flex-row">
++                                        <div className="text-danger mb-1 me-2">
++                                            {Array.from({length: Product.rating.rate}).map(star => (<FaStar/>))}
++                                        </div>
++                                        <span>{Product.rating.count}</span>
++                                    </div>
++                                    <div className="mt-1 mb-0 text-muted small">
++                                        <span>100% cotton</span>
++                                        <span className="text-primary"> • </span>
++                                        <span>Light weight</span>
++                                        <span className="text-primary"> • </span>
++                                        <span>
++                      Best finish
++                      <br/>
++                    </span>
++                                    </div>
++                                    <div className="mb-2 text-muted small">
++                                        <span>Unique design</span>
++                                        <span className="text-primary"> • </span>
++                                        <span>For men</span>
++                                        <span className="text-primary"> • </span>
++                                        <span>
++                      Casual
++                      <br/>
++                    </span>
++                                    </div>
++                                    <p className="text-truncate mb-4 mb-md-0">
++                                        {Product.description}
++                                    </p>
++                                </div>
++                                <div className="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
++                                    <div className="d-flex flex-row align-items-center mb-1">
++                                        <h4 className="mb-1 me-1">{Product.price}<code>dh</code></h4>
++                                        <span className="text-danger">
++                      <s>$20.99</s>
++                    </span>
++                                    </div>
++                                    <h6 className="text-success">Free shipping</h6>
++                                    <div className="d-flex flex-column mt-4">
++                                        <button className="btn btn-primary btn-sm"
++                                                onClick={() => navigate(`/AllCategories/details/${Product.id}`)} type="button">
++                                            Details <FaInfo/>
++                                        </button>
++                                        <button
++                                            className="btn btn-outline-danger btn-sm mt-2"
++                                            type="button"
++                                        >
++                                            Add to wishlist <FaHeart/>
++                                        </button>
++                                        <button
++                                            className="btn btn-outline-warning btn-sm mt-2"
++                                            type="button"
++                                        >
++                                            ADD TO CART <FaCartShopping/>
++                                        </button>
++                                    </div>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++                </div>
++            </div>
++        </>
++
++
++    )
++}
++
++export default Card;
+\ No newline at end of file
+Index: Components/Cars.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Cars.jsx b/Components/Cars.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Cars.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,11 @@
++
++
++const Cars = () => {
++    return (
++        <>
++            <h1>CARS SECTION</h1>
++        </>
++
++    )
++}
++export default Cars;
+\ No newline at end of file
+Index: Components/Header.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Header.jsx b/Components/Header.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Header.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,9 @@
++const Header = ( ) => {
++    return (
++        <header>
++
++        </header>
++    )
++}
++
++export default Header;
+\ No newline at end of file
+Index: Components/Modal.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Modal.jsx b/Components/Modal.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Modal.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,39 @@
++const Modal = ({IsOpen , CloseModal}) => {
++    if (!IsOpen) return null
++    return (
++        <div className="card sd" style={{padding : '15px'}}>
++            <div className="modal-dialog" role="document">
++                <div className="modal-content">
++                    <div className="modal-header">
++                        <h5 className="modal-title">Modal title</h5>
++                        <button
++                            type="button"
++                            className="close"
++                            data-dismiss="modal"
++                            aria-label="Close"
++                        >
++                            <span aria-hidden="true">×</span>
++                        </button>
++                    </div>
++                    <div className="modal-body">
++                        <p>Modal body text goes here.</p>
++                    </div>
++                    <div className="modal-footer">
++                        <button type="button" className="btn btn-primary">
++                            Save changes
++                        </button>
++                        <button
++                            type="button"
++                            className="btn btn-secondary"
++                            data-dismiss="modal"
++                            onClick={CloseModal}
++                        >
++                            Close
++                        </button>
++                    </div>
++                </div>
++            </div>
++        </div>
++)
++}
++export default Modal;
+\ No newline at end of file
+Index: Components/Navbar.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Navbar.jsx b/Components/Navbar.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Navbar.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,106 @@
++import {Link, NavLink} from "react-router-dom";
++import '../assets/styles/Navbar.css'
++import {FaBeer, FaCartPlus, FaHeart, FaSearch, FaUser} from "react-icons/fa";
++import {FaCartShopping} from "react-icons/fa6";
++import React from "react";
++
++const Navbar = () => {
++  return (
++      <div className="main-navbar shadow-sm sticky-top">
++        <div className="top-navbar">
++          <div className="container-fluid">
++            <div className="row">
++              <div className="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
++                <Link to='/'>
++                  <img className='logoMain' src='https://1000logos.net/wp-content/uploads/2021/04/AliExpress-logo.png' alt='logo'/>
++                </Link>
++              </div>
++              <div className="col-md-5 my-auto">
++                <form role="search">
++                  <div className="input-group">
++                    <input   type="search" placeholder="Search your product" className="form-control "/>
++                    <button className="btn bg-white" type="submit">
++                        <FaSearch/>
++                    </button>
++                  </div>
++                </form>
++              </div>
++              <div className="col-md-5 my-auto">
++                <ul className="nav justify-content-end">
++
++                  <li className="nav-item">
++                    <Link className="nav-link" to="/
++                      <">
++                      <FaCartShopping/> Cart (0)
++                    </Link>
++                  </li>
++                  <li className="nav-item">
++                    <Link className="nav-link" to="/
++                      <">
++                      <FaHeart/> Wishlist (0)
++                    </Link>
++                  </li>
++                  <li className="nav-item dropdown">
++                    <NavLink className="nav-link dropdown-toggle" to="/id=" id="navbarDropdown" role="button"
++                       data-bs-toggle="dropdown" aria-expanded="false">
++                      <FaUser/> profile
++                    </NavLink>
++                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
++                      <li><NavLink className="dropdown-item" to="/profile"><i className="fa fa-user"></i> Profile</NavLink></li>
++                      <li><NavLink className="dropdown-item" to="/<i"><i className="fa fa-list"></i> My Orders</NavLink></li>
++                      <li><NavLink className="dropdown-item" to="/<i"><i className="fa fa-heart"></i> My Wishlist</NavLink></li>
++                      <li><NavLink className="dropdown-item" to="/<i"><i className="fa fa-shopping-cart"></i> My Cart</NavLink></li>
++                      <li><NavLink className="dropdown-item" to="/<i"><i className="fa fa-sign-out"></i> Logout</NavLink></li>
++                    </ul>
++                  </li>
++                </ul>
++              </div>
++            </div>
++          </div>
++        </div>
++        <nav className="navbar navbar-expand-lg">
++          <div className="container-fluid">
++            <NavLink className="navbar-brand d-block d-sm-block d-md-none d-lg-none" to="/
++              Funda">
++              Funda Ecom
++            </NavLink>
++            <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
++                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
++                    aria-expanded="false" aria-label="Toggle navigation">
++              <span className="navbar-toggler-icon"></span>
++            </button>
++            <div className="collapse navbar-collapse" id="navbarSupportedContent">
++              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/">Home</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/AllCategories">All Categories</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/NewArrivals">New Arrivals</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/FeaturedProducts">Featured Products</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/Electronics">Electronics</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/Fashions">Fashions</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/Accessories">Accessories</NavLink>
++                </li>
++                <li className="nav-item">
++                  <NavLink className="nav-link" to="/Appliances">Appliances</NavLink>
++                </li>
++              </ul>
++            </div>
++          </div>
++        </nav>
++      </div>
++  )
++}
++
++export default Navbar
+\ No newline at end of file
+Index: Components/NotFound.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/NotFound.jsx b/Components/NotFound.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/NotFound.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,7 @@
++const NotFound = () => {
++    return (
++        <h1 style={{color : 'red'}}>NotFound</h1>
++    )
++}
++
++export default NotFound;
+\ No newline at end of file
+Index: Components/PagePosts.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/PagePosts.jsx b/Components/PagePosts.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/PagePosts.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,57 @@
++import React, { useState, useRef, useEffect, useCallback } from "react";
++import usePosts from '../Hooks/usePosts';
++import Post from '../Components/Post';
++import "../App.css"
++const PagePosts = () => {
++    const [PageNum, setPageNum] = useState(1);
++    const { Result, HasNextPage, Error, IsError, isLoading } = usePosts(PageNum);
++    const LastPostRef = useRef(null);
++
++    const ObserverHandler = (entries) => {
++        if (entries[0].isIntersecting && HasNextPage) {
++            console.log('We are near the last post!')
++            setPageNum(prev => prev + 1)
++        }
++    };
++
++    useEffect(() => {
++        const Options = {}
++        const Observer = new IntersectionObserver(ObserverHandler, Options)
++
++        if (LastPostRef.current) {
++            Observer.observe(LastPostRef.current);
++        }
++
++        console.log(LastPostRef)
++    }, [Result]);
++
++    const Content = Result.map((item, i) => (
++        <div key={i} ref={i + 1 === Result.length ? LastPostRef : null}>
++            <div className="card">
++                <img className='h-50 w-50' src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Mr._Krabs.svg/640px-Mr._Krabs.svg.png" />
++                <div className="card-header">POST : {item.userId} | ID Post: {item.id}</div>
++                <div className="card-body">
++                    <blockquote className="blockquote mb-0">
++                        {item.body}
++                        <footer className="blockquote-footer">
++                            <br />
++                            <cite title="Source Title">{item.title}</cite>
++                        </footer>
++                    </blockquote>
++                </div>
++            </div>
++        </div>
++    ));
++
++    return (
++        <>
++            {isLoading && <p>Loading...</p>}
++            <div>
++                {Content}
++                {HasNextPage && (<h1>LOADING...</h1>)}
++            </div>
++        </>
++    );
++};
++
++export default PagePosts;
+Index: Components/Post.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Post.jsx b/Components/Post.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Post.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,17 @@
++const Post = ({Data}) => {
++    return (
++        <div className="card border-light mb-3 border-2" style={{maxWidth: "18rem"}}>
++            <div className="card-header">
++                {Data.Title}
++            </div>
++            <div className="card-body">
++                <h5 className="card-title">{Data.id} </h5>
++                <p className="card-text">
++                    {Data.body}
++                </p>
++            </div>
++        </div>
++
++    )
++}
++export default Post;
+\ No newline at end of file
+Index: Components/Products.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Components/Products.jsx b/Components/Products.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Components/Products.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,58 @@
++//imports libraries
++import {useEffect, useRef, useState} from "react";
++//hooks
++import useProducts from "../Hooks/useProducts.jsx";
++
++//styles
++import "../App.css"
++import '../assets/styles/CardProduct.css'
++import {Fa0} from "react-icons/fa6";
++//Components
++import Card from "./Card.jsx";
++
++const PagePosts = () => {
++    const [limit, setlimit] = useState(1);
++    const {Products, HasMoreProducts, IsLoading} = useProducts(limit);
++    const LastPostRef = useRef(null);
++
++    const ObserverHandler = (entries) => {
++        if (entries[0].isIntersecting && HasMoreProducts) {
++            setlimit(prev => prev + 1)
++        }
++    };
++
++    useEffect(() => {
++        const Options = {}
++        const Observer = new IntersectionObserver(ObserverHandler, Options)
++        console.log("%cHasMoreProducts : " + HasMoreProducts, 'color : red')
++        console.log("limit  : " + limit)
++        if (LastPostRef.current) {
++            Observer.observe(LastPostRef.current);
++        }
++
++        console.log(LastPostRef)
++    }, [Products]);
++
++    const Content = Products.map((item, i) => {
++        return (
++            <div  key={i}
++                 ref={i + 1 === Products.length ? LastPostRef : null}>
++                <Card Product={item}>
++                </Card>
++            </div>
++
++        )
++    });
++
++    return (
++        <section style={{backgroundColor: "#eee"}}>
++            <div className="container py-5">
++                {!IsLoading && Content}
++                {IsLoading && <p><Fa0 className='loading'/> Loading...</p>}
++                {HasMoreProducts && <p><Fa0 className='loading'/> Loading...</p>}
++            </div>
++        </section>
++    );
++};
++
++export default PagePosts;
+Index: Hooks/usePosts.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Hooks/usePosts.jsx b/Hooks/usePosts.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Hooks/usePosts.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,40 @@
++import {useEffect, useState} from "react";
++import {getDataPosts} from "../Api/Axios.js";
++
++
++const usePosts = (PageNum = 1) => {
++    const [Result, setResult] = useState([]);
++    const [isLoading, setIsloading] = useState(true);
++    const [IsError, setIsError] = useState(false);
++    const [Error, setError] = useState({});
++    const [HasNextPage, setHasNextPage] = useState(false);
++
++
++    useEffect(() => {
++        const Controller = new AbortController();
++
++        const { signal } = Controller
++
++        getDataPosts(PageNum, {signal})
++            .then((data) => {
++                console.log(data)
++                setResult(prev => [ ...prev,...data])
++                setHasNextPage(Boolean(data.length))
++                setIsloading(false)
++
++            }).catch(e => {
++                setIsloading(false);
++                if (Controller.aborted) return
++                setIsError(true);
++                setError({Message: e.message})
++            })
++
++
++        return () => Controller.abort();
++
++    }, [PageNum])
++
++    return {Result, isLoading, IsError, Error, HasNextPage}
++}
++
++export default usePosts;
+\ No newline at end of file
+Index: Hooks/useProducts.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Hooks/useProducts.jsx b/Hooks/useProducts.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Hooks/useProducts.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,37 @@
++import {getProducts} from '../Api/Axios';
++import {useState, useEffect} from "react";
++
++const useProducts = (limit = 15) => {
++    const [Products , setProducts ] = useState([])
++    const [IsError , setIsError ] = useState(false)
++    const [Error , setError ] = useState(null)
++    const [IsLoading , setIsLoading ] = useState(true)
++    const [HasMoreProducts, setHasMoreProducts] = useState(true);
++
++    useEffect( () => {
++        const Controller = new AbortController();
++        const {signal} = Controller;
++
++        if (HasMoreProducts) {
++            getProducts(limit , {signal}).then((data) => {
++                console.log(data)
++                setProducts(data);
++                setIsLoading(false);
++                setHasMoreProducts(Boolean((Products.length) !== 20 ))
++
++            }).catch((err)=> {
++                setIsLoading(false);
++                if (Controller.aborted) return
++                setError(err.message)
++                setIsError(true)
++            })
++        }
++
++        return () => {
++            Controller.abort()
++        }
++    } , [limit])
++    return {Products , HasMoreProducts , IsLoading ,IsError , Error}
++}
++
++export default useProducts;
+\ No newline at end of file
+Index: Pages/AllCategories.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/AllCategories.jsx b/Pages/AllCategories.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/AllCategories.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,21 @@
++import {Outlet, useNavigate} from 'react-router-dom'
++
++const AllCategories = () => {
++    const navigate = useNavigate();
++    return (
++        <>
++            <div>AllCategories</div>
++
++            <nav aria-label="breadcrumb">
++                <ol className="breadcrumb">
++                    <li className="breadcrumb-item" onClick={() => navigate('cars')}><a href="#">Cars</a></li>
++                    <li className="breadcrumb-item" onClick={() => navigate('posts')} ><a href="#">Posts</a></li>
++                    <li className="breadcrumb-item active"   onClick={() => navigate('products')}  aria-current="page">Products</li>
++                </ol>
++            </nav>
++            <Outlet/>
++        </>
++
++    )
++}
++export default AllCategories
+\ No newline at end of file
+Index: Pages/Appliances.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/Appliances.jsx b/Pages/Appliances.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/Appliances.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const Appliances  = () => {
++    return (
++        <div>Appliances</div>
++    )
++}
++export default Appliances
+\ No newline at end of file
+Index: Pages/Contact.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/Contact.jsx b/Pages/Contact.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/Contact.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const Contact  = () => {
++    return (
++        <div>Contact</div>
++    )
++}
++export default Contact
+\ No newline at end of file
+Index: Pages/Electronics.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/Electronics.jsx b/Pages/Electronics.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/Electronics.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const Electronics  = () => {
++    return (
++        <div>Electronics</div>
++    )
++}
++export default Electronics
+\ No newline at end of file
+Index: Pages/Fashions.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/Fashions.jsx b/Pages/Fashions.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/Fashions.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const Fashions  = () => {
++    return (
++        <div>Fashions</div>
++    )
++}
++export default Fashions
+\ No newline at end of file
+Index: Pages/FeaturedProducts.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/FeaturedProducts.jsx b/Pages/FeaturedProducts.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/FeaturedProducts.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const FeaturedProducts  = () => {
++    return (
++        <div>FeaturedProducts</div>
++    )
++}
++export default FeaturedProducts
+\ No newline at end of file
+Index: Pages/Home.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/Home.jsx b/Pages/Home.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/Home.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const Home  = () => {
++    return (
++        <div>HOME</div>
++    )
++}
++export default Home
+\ No newline at end of file
+Index: Pages/NewArrivals.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/NewArrivals.jsx b/Pages/NewArrivals.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/NewArrivals.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,6 @@
++const NewArrivals  = () => {
++    return (
++        <div>NewArrivals</div>
++    )
++}
++export default NewArrivals
+\ No newline at end of file
+Index: Pages/ProductDetails.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/ProductDetails.jsx b/Pages/ProductDetails.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/ProductDetails.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,32 @@
++import { useParams } from "react-router-dom";
++import {useEffect , useState} from "react";
++import {getProductsbyId} from "../Api/Axios.js";
++const ProductDetails = () => {
++    const Params = useParams();
++    const [IsLoading, setIsloading] = useState(true);
++    const [DataProduct, setDataProdut] = useState([]);
++    useEffect( () => {
++        const Controller = new AbortController();
++        const {singal} = Controller;
++        try {
++            getProductsbyId(Params.id , {singal}).then((data) => {
++                setDataProdut(data)
++                setIsloading(false)
++            })
++        }catch (errr) {
++            console.log(errr.message);
++        }
++        return () => Controller.abort();
++    } , [])
++
++
++    return (
++        <>
++            {IsLoading && <p>Loading...</p>}
++            {!IsLoading && JSON.stringify(DataProduct)}
++        </>
++    )
++
++}
++
++export default ProductDetails;
+\ No newline at end of file
+Index: Pages/ProductsPage.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Pages/ProductsPage.jsx b/Pages/ProductsPage.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/Pages/ProductsPage.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,7 @@
++
++
++export const ProductsPage = () => (<section style={{backgroundColor: "#eee"}}>
++    <div className="container py-5">
++
++    </div>
++</section>)
+Index: assets/react.svg
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/assets/react.svg b/assets/react.svg
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/assets/react.svg	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="35.93" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 228"><path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z"></path></svg>
+\ No newline at end of file
+Index: assets/styles/CardProduct.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/assets/styles/CardProduct.css b/assets/styles/CardProduct.css
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/assets/styles/CardProduct.css	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,10 @@
++@media (max-width: 767.98px) { .border-sm-start-none { border-left: none !important; } }
++.fixeSize {
++    max-width: 100%;
++    max-height: 100%;
++    width: auto;
++    height: auto;
++    display: block; /* Remove any extra space below the image */
++    margin: 0 auto; /* Center the image horizontally */
++}
++
+Index: assets/styles/Navbar.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/assets/styles/Navbar.css b/assets/styles/Navbar.css
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/assets/styles/Navbar.css	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,74 @@
++.main-navbar{
++    border-bottom: 1px solid #ccc;
++    width: 100%;
++}
++.main-navbar .top-navbar{
++    background-color: #191919;
++    padding-top: 10px;
++    padding-bottom: 10px;
++}
++.main-navbar .top-navbar .brand-name{
++    color: #fff;
++}
++.main-navbar .top-navbar .nav-link{
++    color: #fff;
++    font-size: 16px;
++    font-weight: 500;
++}
++.logoMain {
++    height: 90px;
++    filter: brightness(90) saturate(0%);}
++.main-navbar .top-navbar .dropdown-menu{
++    padding: 0px 0px;
++    border-radius: 0px;
++}
++.main-navbar .top-navbar .dropdown-menu .dropdown-item{
++    padding: 8px 16px;
++    border-bottom: 1px solid #ccc;
++    font-size: 14px;
++}
++.main-navbar .top-navbar .dropdown-menu .dropdown-item i{
++    width: 20px;
++    text-align: center;
++    color: #2874f0;
++    font-size: 14px;
++}
++.main-navbar .navbar{
++    padding: 0px;
++    background-color: #ddd;
++}
++.main-navbar .navbar .nav-item .nav-link{
++    padding: 8px 20px;
++    color: #000;
++    font-size: 15px;
++}
++
++@media only screen and (max-width: 600px) {
++    .main-navbar .top-navbar .nav-link{
++        font-size: 12px;
++        padding: 8px 10px;
++    }
++}
++
++.logoMain {
++    animation: colorize 3s ease-in-out infinite alternate;
++}
++
++@keyframes colorize {
++    0% {
++        filter: brightness(90) saturate(0%);
++    }
++    100% {
++        filter: brightness(0) saturate(100%);
++    }
++}
++
++a.active {
++    border-bottom: 1px solid #f79917;
++    box-sizing: content-box;
++}
++a:hover {
++    background: rgba(128, 128, 128, 0.25);
++    border-bottom: 1px solid #f79917;
++
++}
+\ No newline at end of file
+Index: main.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.jsx b/main.jsx
+new file mode 100644
+--- /dev/null	(revision 11e89f65eeca22b83a630760365db16e9791a947)
++++ b/main.jsx	(revision 11e89f65eeca22b83a630760365db16e9791a947)
+@@ -0,0 +1,15 @@
++import React from 'react'
++import ReactDOM from 'react-dom/client'
++import App from './App.jsx'
++import {BrowserRouter} from "react-router-dom";
++
++import 'bootstrap/dist/css/bootstrap.min.css';
++import 'bootstrap/dist/js/bootstrap.min.js';
++
++ReactDOM.createRoot(document.getElementById('root')).render(
++    <React.StrictMode>
++        <BrowserRouter>
++            <App/>
++        </BrowserRouter>
++    </React.StrictMode>,
++)
+diff --git a/.App.jsx.swp b/.App.jsx.swp
+new file mode 100644
+index 0000000000000000000000000000000000000000..6152482144aac3b0a18aa600c5d4432bcab42471
+GIT binary patch
+literal 12288
+zc%1E;&ui2`6vtod!K$r_9`quND@a>y)7FdFZDHBASg=1RR`4X#WZI@?Ghvdg3#EGT
+z52y#vUbN7gsCW=BA|Awp;K93y;9WtFzWmtTOuA)*2aE7N@FmH6^L?4@n+%j@Y3RoE
+z47)ry0?2WIQ}6nPH*)}9bpl-DtEO<FEv31|>Df~Iad+c_#)R;12huYZ1UCa?eqrv`
+zypn4I&nE{=S*ZwR3d2{XQS!XOHNV!rGC>gS>48fl!$aZOxx!g?^2FkPPlzB0f*=Tj
+zAc%iR;B~+~Ja#761Ie)?b0i3YAP9mW2!bF8;{SzP0B;TgJm`Yx|Nr&B|Gymrc#e98
+z+Ckk%-9%kL{X7cr7PW;kQRh)VdH~*|9->UtFzR<Vz%SHS)MwNO)C<%jl!-cx`f>!|
+zF^Z$kpgtZ3c!}~*L#XeE0Jc%rQQfFdIM3Ipr>Gs&HtI=NJpZk({rn{ff*=Tj_-jPX
+zlPX}ASmsqHU?tBR1=t(~hV;dUkfJf(IFGLvWHk`J9*r_lf_Xex9V_$~m~cczxWU*)
+zaaIOXvg%sQ7~f<@8>cZV?v#|W*SX_sMVjG!b*2Ols!CY%N?KJj(28YqIV*C1)t0Va
+zDT(E)FzE<0P|~$ctw<`IuTELI0XKtmjU<%MkKJ}`?wUfIMl-r+mAL!66T5C<iGbUV
+zZ(Omh^evJfd?L>7b(>w)ycRu7_byir>1PV?6)_(Mb5Enpl~y6V&SAD)OVo1O5=)~|
+zj#K7=Sdq%k^eUYQi|tuT)WT(v)JvDRDl4MZG>Wa>@Zv0AU*ak~wiur(fv=Lwdcnlk
+zAlgXS80+n0W8-WCz^+8wOs4P4N>*55&<I=L8+tPQ61gy1H#YW;x}_{J;o=kcMm?uH
+z8tbBkqn^t+8VjM7rJmG1Q4d=T59669NNrsDbEh)8W!Ltk`?BebxxOQ1Oi5TDoZfl#
+z@u`e%N$nE4qnXGUw56Kyq;r|yEnaY~`W|I6{YbVyy?heYheqpO9~Xv_L52~n2fwj&
+jH(2yOT#OGs+f2MF{HlIHg+Vo7$x8DE(f9W0QJDGzANPf=
+

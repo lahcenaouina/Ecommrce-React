@@ -1,0 +1,10 @@
+@media (max-width: 767.98px) { .border-sm-start-none { border-left: none !important; } }
+.fixeSize {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block; /* Remove any extra space below the image */
+    margin: 0 auto; /* Center the image horizontally */
+}
+
