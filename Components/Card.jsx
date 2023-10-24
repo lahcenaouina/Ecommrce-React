@@ -5,7 +5,7 @@ import {FaCartShopping} from "react-icons/fa6";
 import {useStoreActions, useStoreState} from "easy-peasy";
 import {useState} from "react";
 
-const Card = ({Product}) => {
+const Card = ({Product = ''}) => {
     const navigate = useNavigate();
     const addToWishlist = useStoreActions(Actions => Actions.wishlist.addToWishlist)
     const removeFromWishlist = useStoreActions(Actions => Actions.wishlist.removeFromWishlist)
@@ -27,7 +27,7 @@ const Card = ({Product}) => {
 
 
     return (<>
-            <div className="row justify-content-center mb-3 ">
+            <div className="row justify-content-center mb-3 card-product-grid ">
                 <div className="col-md-12 col-xl-10">
                     <div className="card shadow-0 border rounded-3">
                         <div className="card-body">
@@ -100,7 +100,7 @@ const Card = ({Product}) => {
                                         </button>
                                         <div className='d-flex justify-content-between'>
                                             <button className="btn btn-primary mt-2 btn-sm w-50"
-                                                    onClick={() => navigate(`/details/${Product.id}`)} type="button">
+                                                    onClick={() => navigate(`/products/details/${Product.id}`)} type="button">
                                                 Details <FaInfo/>
                                             </button>
                                             <button

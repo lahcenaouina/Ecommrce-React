@@ -44,6 +44,12 @@ const store = createStore({
         clearCart : action((state) => {
             state.items = [];
         })
+    } ,
+    User : {
+        Data: [],
+        setData : action ((state , Payload) => {
+            state.Data = [Payload];
+        })
     }
 });
 export default store

@@ -1,14 +1,22 @@
 import {Link, NavLink} from "react-router-dom";
 import '../assets/styles/Navbar.css'
-import {FaHeart, FaKey, FaSearch} from "react-icons/fa";
-import {FaCartShopping} from "react-icons/fa6";
-import React, {useState} from "react";
+import {
+    FaHeart,
+    FaKey, FaQuestionCircle,
+    FaSearch,
+    FaSignOutAlt,
+    FaUser, FaUserAlt
+} from "react-icons/fa";
+import {FaCartShopping, FaGear} from "react-icons/fa6";
+import  {useState} from "react";
 import {useStoreState} from "easy-peasy";
 import Popup from "./Popup.jsx";
+import LoginForm from "./LoginForm.jsx";
 
 const Navbar = () => {
     const WislishLength = useStoreState(state => state.wishlist.items.length);
     const [isPopupOpen, setPopupOpen] = useState(false);
+    const UserData = useStoreState(state => state.User.Data)
 
     const openPopup = () => {
         setPopupOpen(true);
@@ -17,8 +25,7 @@ const Navbar = () => {
     const closePopup = () => {
         setPopupOpen(false);
     };
-    return (
-        <div className="main-navbar shadow-sm sticky-top">
+    return (<div className="main-navbar shadow-sm sticky-top">
             <div className="top-navbar">
                 <div className="container-fluid">
                     <div className="row">
@@ -43,27 +50,45 @@ const Navbar = () => {
                             <ul className="nav justify-content-end">
 
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/
-                      <">
+                                    <Link className="nav-link" to="/"
+                                          onClick={openPopup}>
                                         <FaCartShopping/> Cart (0)
                                     </Link>
+                                    <Popup isOpen={isPopupOpen} onClose={closePopup}>
+                                        <h1>CART</h1>
+                                    </Popup>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/
-                      <">
+                                    <Link className="nav-link" to="/">
                                         <FaHeart style={WislishLength && {color: 'red'}}/> Wishlist ({WislishLength})
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link"
-                                          onClick={openPopup}
-                                    >
-                                        <FaKey/> Login
-                                    </Link>
+                                    {UserData.length ?
+                                        (<div className="dropdown">
+                                            <button className="nav-link dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                               <FaUser/> Profile
+                                            </button>
+                                            <ul className="dropdown-menu rounded-2" aria-labelledby="dropdownMenuButton1">
+                                                <Link className="dropdown-item" to='/Profile'> <FaUserAlt/> My Profile</Link>
+                                                <li><a className="dropdown-item" href="#"> <FaGear/> Settings & privacy</a></li>
+                                                <li><a className="dropdown-item" href="#"> <FaQuestionCircle/> Help & support</a></li>
+                                                <li><a className="dropdown-item btn" onClick={() => {
+                                                    console.log("Log out ! ")
+                                                }
+                                                }> <FaSignOutAlt/> Log out</a></li>
+                                            </ul>
+                                        </div>) :
+                                        (
+                                        <Link className="nav-link" onClick={openPopup}>
+                                            <FaKey/> Login
+                                        </Link>)}
+
 
                                     <Popup isOpen={isPopupOpen} onClose={closePopup}>
-                                        <h2>Popup lahcen</h2>
-                                        <p>This is the content of the popup.</p>
+                                        <LoginForm closepopup={closePopup}/>
                                     </Popup>
 
                                 </li>
@@ -113,8 +138,7 @@ const Navbar = () => {
                     </div>
                 </div>
             </nav>
-        </div>
-    )
+        </div>)
 }
 
 export default Navbar

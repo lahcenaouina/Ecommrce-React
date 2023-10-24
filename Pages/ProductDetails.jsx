@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
-import {useEffect , useState} from "react";
+import React, {useEffect , useState} from "react";
 import {getProductsbyId} from "../Api/Axios.js";
 import {useStoreActions} from "easy-peasy";
+import Breadcrumbs from "../Components/Breadcrumbs.jsx";
 const ProductDetails = () => {
     const Params = useParams();
 
@@ -24,6 +25,8 @@ const ProductDetails = () => {
 
     return (
         <>
+            <Breadcrumbs/>
+
             {IsLoading && <p>Loading...</p>}
             {!IsLoading && JSON.stringify(DataProduct , 0  , 2)}
         </>
